@@ -23,19 +23,38 @@ class App extends React.Component {
     myChangeHandler = (e) => 
     {
         this.setState({task_value: e.target.value});
+        console.log("Entered Value:"+this.state.task_value);
     }
     
     addItem = (e) => 
     {
         e.preventDefault();
-        const tasks = this.state.task_list;
-        if(tasks !== "")
+        const tasks = this.state.task_list; //Getting all the Values in List
+        const task = this.state.task_value; //Getting the User Input
+        let flag = 0;
+        
+        //Preventing Empty string and also duplicate entries
+        if(task !== "")
         {
-            tasks.push(this.state.task_value);
-            console.log(tasks);
+            for(let i=0; i < tasks.length; i++)
+            {
+                if(task.toUpperCase() == tasks[i].toUpperCase())
+                {
+                    flag = 1;
+                    break;
+                }
+                    
+            }
+            
+            if(flag == 0)
+            {
+                tasks.push(task);
+                console.log(tasks);
+            }
         }
-        this.setState({task_value:""});
-        console.log(this.state.task_list.length);
+        
+        this.setState({task_value:""}); //Setting the Input Field to Blank after Insertion
+        console.log("Tasks Size:"+this.state.task_list.length);
     }
     
     listItems = () => 
@@ -56,7 +75,7 @@ class App extends React.Component {
     {
         e.preventDefault();
         let items_length = this.state.task_list.length;
-        let get_random = Math.floor(Math.random() * (items_length+1));
+        let get_random = Math.floor(Math.random() * (items_length));
         console.log(get_random);
         
         this.setState({get_task:get_random})
@@ -90,6 +109,7 @@ class App extends React.Component {
                                         <form>
                                             <fieldset className="border p-2">
                                                 <legend className="w-auto">Add New Task</legend>
+                                                <small className="text-muted">Duplicate Entries are Eliminated.</small>
                                                 <input className="form-control form-control-sm" type="text" placeholder="Enter Task" value={this.state.task_value} onChange={this.myChangeHandler}></input>
                                                 <br />
                                                 <button className="btn btn-success btn-block btn-sm" onClick={this.addItem}>Add Task</button>
